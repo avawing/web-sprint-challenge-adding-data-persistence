@@ -1,4 +1,5 @@
 const express = require("express");
+const { findTasks } = require("../data/projectshelper");
 const db = require("../data/projectshelper");
 
 const projectRoute = express.Router();
@@ -36,16 +37,16 @@ projectRoute.get("/:id", (req, res) => {
 
 projectRoute.get("/:id/tasks", (req, res) => {
   db.findTasks(req.params.id)
-  .then(tasks => {
-      if(tasks.length){
-          res.status(200).json(tasks).end()
-      }else{
-          res.status(404).json({message: 'Project file not found'}).end()
+    .then((tasks) => {
+      if (tasks.length) {
+        res.status(200).json(tasks).end();
+      } else {
+        res.status(404).json({ message: "Project file not found" }).end();
       }
-  })
-  .catch(err =>{
-      res.status(500).json({message: "Oops"}).end()
-  })
+    })
+    .catch((err) => {
+      res.status(500).json({ message: "Oops" }).end();
+    });
 });
 
 projectRoute.post("/", (req, res) => {
@@ -55,6 +56,32 @@ projectRoute.post("/", (req, res) => {
         db.findById(project[0])
           .then((project) => res.status(201).json(project).end())
           .catch((err) => res.status(500).json({ message: "bigger error" }));
+      } else {
+        res
+          .status(400)
+          .json({ message: "Bad Request - please fill all required fields" })
+          .end();
+      }
+    })
+    .catch((err) => {
+      res.status(500).json(err).end();
+    });
+});
+
+projectRoute.post("/:id/tasks", (req, res) => {
+  const data = req.body;
+  data["project_id"] = Number(req.params.id);
+
+  db.addTask(data, req.params.id)
+    .then((project) => {
+      if (project) {
+          findTasks(req.params.id)
+          .then(project => {
+            res.status(201).json(project).end();
+          })
+        .catch(err=>{
+            res.status(400).json(err).end();
+        })
       } else {
         res
           .status(400)
