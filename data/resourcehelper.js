@@ -11,7 +11,7 @@ function findById(id){
 }
 
 function add(data){
-
+    return db('resources').insert(data)
 }
 
 module.exports = {find, findById, add}

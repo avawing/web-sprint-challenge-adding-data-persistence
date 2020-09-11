@@ -16,23 +16,35 @@ resourceRoute.get("/", (req, res) => {
 
 resourceRoute.get("/:id", (req, res) => {
   db.findById(req.params.id)
-  .then(resource => {
-      if(resource){
-          res.status(200).json(resource).end()
+    .then((resource) => {
+      if (resource) {
+        res.status(200).json(resource).end();
+      } else {
+        res.status(404).json({ message: "resource not found" }).end();
       }
-      else{
-          res.status(404).json({message: "resource not found"}).end()
-      }
-  } )
-.catch(err=> {
-    res.status(500).json({message: "nope"}).end()
-})
-})
-
-;
+    })
+    .catch((err) => {
+      res.status(500).json({ message: "nope" }).end();
+    });
+});
 
 resourceRoute.post("/", (req, res) => {
-  res.send("posted");
+  db.add(req.body)
+  .then((resource) => {
+    if (resource) {
+      db.findById(resource[0])
+        .then((resource) => res.status(201).json(resource).end())
+        .catch((err) => res.status(500).json({ message: "bigger error" }));
+    } else {
+      res
+        .status(400)
+        .json({ message: "Bad Request - please fill all required fields" })
+        .end();
+    }
+  })
+  .catch((err) => {
+    res.status(500).json(err).end();
+  });
 });
 
 module.exports = resourceRoute;
