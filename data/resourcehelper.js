@@ -14,4 +14,8 @@ function add(data){
     return db('resources').insert(data)
 }
 
-module.exports = {find, findById, add}
+function getProjects(id){
+    return db('template').where({"resource_id":id})
+}
+
+module.exports = {find, findById, add, getProjects}

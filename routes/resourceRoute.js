@@ -28,6 +28,18 @@ resourceRoute.get("/:id", (req, res) => {
     });
 });
 
+resourceRoute.get('/:id/projects', (req, res)=>{
+    db.getProjects(req.params.id)
+    then(resource => {
+        if(resource){
+          res.status(200).json(resource).end()
+        }else{
+          res.status(404).json({message:"Nope"}).end()
+        }
+      })
+      .catch(err => res.status(500).json({message:"Nope"}).end())
+    })
+
 resourceRoute.post("/", (req, res) => {
   db.add(req.body)
   .then((resource) => {

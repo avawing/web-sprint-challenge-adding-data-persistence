@@ -49,6 +49,18 @@ projectRoute.get("/:id/tasks", (req, res) => {
     });
 });
 
+projectRoute.get('/:id/resources', (req, res)=>{
+  db.getResources(req.params.id)
+  then(resource => {
+    if(resource){
+      res.status(200).json(resource).end()
+    }else{
+      res.status(404).json({message:"Nope"}).end()
+    }
+  })
+  .catch(err => res.status(500).json({message:"Nope"}).end())
+})
+
 projectRoute.post("/", (req, res) => {
   db.add(req.body)
     .then((project) => {

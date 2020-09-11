@@ -30,11 +30,14 @@ function findTasks(pId) {
 function add(data) {
   return db("projects").insert(data);
 }
-//post task to project by id
-function addTask(data, pId) {
+
+function addTask(data) {
   
   return db("tasks").insert(data);
 }
-//post resource (resource helper)
 
-module.exports = { find, findById, add, findTasks, addTask };
+function getResources(id){
+  return db('template').where({"project_id":id})
+}
+
+module.exports = { find, findById, add, findTasks, addTask, getResources };
