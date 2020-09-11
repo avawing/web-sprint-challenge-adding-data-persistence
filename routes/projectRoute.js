@@ -35,7 +35,17 @@ projectRoute.get("/:id", (req, res) => {
 });
 
 projectRoute.get("/:id/tasks", (req, res) => {
-  res.send("Project Tasks");
+  db.findTasks(req.params.id)
+  .then(tasks => {
+      if(tasks.length){
+          res.status(200).json(tasks).end()
+      }else{
+          res.status(404).json({message: 'Project file not found'}).end()
+      }
+  })
+  .catch(err =>{
+      res.status(500).json({message: "Oops"}).end()
+  })
 });
 
 projectRoute.post("/", (req, res) => {

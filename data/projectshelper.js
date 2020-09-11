@@ -11,6 +11,9 @@ function findById(id){
 }
 
 //get tasks by project id
+function findTasks(pId){
+    return db('tasks').where({"project_id": pId}).join('projects', 'projects.id', 'tasks.project_id').select('projects.project_name', 'projects.project_desc', 'tasks.task_name', 'tasks.task_desc', 'tasks.notes')
+}
 
 //get resources (resource helper)
 
@@ -21,4 +24,4 @@ function add(data) {
 //post task to project by id
 //post resource (resource helper)
 
-module.exports = {find, findById, add}
+module.exports = {find, findById, add, findTasks}
