@@ -5,7 +5,8 @@ function find(){
     return db('resources')
 }
 
-function findById(){
+function findById(id){
+    return db('resources').where({id}).first()
 
 }
 
