@@ -37,7 +37,7 @@ function addTask(data) {
 }
 
 function getResources(id){
-  return db('template').where({"project_id":id})
+  return db('template').where({"project_id":id}).join("resources", "resource.id", "template.resource_id").select('resources.resource_name', 'resources.resource_desc')
 }
 
 module.exports = { find, findById, add, findTasks, addTask, getResources };
